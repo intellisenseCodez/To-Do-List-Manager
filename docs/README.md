@@ -1,6 +1,7 @@
 # To-Do List Manager (Bash Script) - Project Case Study
 
 ## 1. Project Overview
+
 ### Background
 In today's fast-paced development environment, developers spend significant time in the terminal. While there are numerous GUI-based task management applications, they often require context switching and can disrupt workflow. This project addresses the need for a lightweight, terminal-based task management solution that integrates seamlessly into a developer's command-line workflow.
 
@@ -166,15 +167,27 @@ ID,Description,Category,Priority,DueDate,Status,CreatedAt,UpdatedAt,CompletedAt
 ### 6.1 Input Validation
 ```bash
 validate_date() {
-    if [[ ! $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+    if [[ ! $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ && date -d "$1" ]]; then
         return 1
     fi
+    
     date -d "$1" >/dev/null 2>&1
     return $?
 }
 
 validate_priority() {
     [[ "$1" =~ ^(HIGH|MEDIUM|LOW)$ ]]
+}
+```
+
+### 6.2 Path Validation
+```bash
+validate_path(){
+    if [[ -e "$1" ]]; then
+        return 0 # path exists
+    else
+        return 1 # path does not exists
+    fi
 }
 ```
 
