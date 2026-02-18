@@ -1,12 +1,11 @@
 #!/bin/bash
 
-TASK_DIR="data"
-TASK_FILE="data/tasks.csv"
-TASK_BACKUP_FILE="data/tasks.gz"
-LOG_FILE="data/task_manager.log"
+DATA_DIR="../data"
+TASK_FILE="../data/tasks.csv"
+TASK_BACKUP_FILE="../data/tasks.gz"
+LOG_FILE="../data/task_manager.log"
 
 # validate if a file or directory exist
-# if not create it
 function validate_path(){
     if [[ -e "$1"  ]]; then
         echo "path exist"
@@ -20,19 +19,26 @@ function validate_path(){
 
 # Ensure that the directory and files exist
 function intialize_task_file(){
-    if ! validate_path "$1"; then
-        if [[ $(file $1 | grep "ASCII") ]]; then
+    if ! validate_path "$TASK_FILE"; then
+        # Ensure the 'data' directory exists
+        if [[ ! -d $DATA_DIR ]]; then
             echo "Directory does not exit"
-            mkdir -p $1
-        else
-            echo "file does not exist"
-            touch $1
+            mkdir -p $DATA_DIR
+        fi
+
+        # Ensure the task file exists in the 'data' folder
+        if [ ! -f "$TASK_FILE" ]; then
+            touch "$TASK_FILE"  # Create tasks.csv inside the 'data' folder
+        fi
+
+        # Ensure the log file exists in the 'data' folder
+        if [ ! -f "$LOG_FILE" ]; then
+            touch "$LOG_FILE"  # Create task_manager.log inside the 'data' folder
         fi
     else
         echo "Path already exist"
     fi
 }
-
 
 
 # Add new tasks
@@ -103,7 +109,7 @@ function display_main_menu(){
 # Main function to start running the program
 function main(){
     # initialize files and directory
-    intialize_task_file
+    intialize_task_file     
 
     # display menu
     display_main_menu
